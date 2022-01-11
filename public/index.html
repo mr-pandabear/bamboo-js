@@ -20,5 +20,23 @@
 				r.parentNode.insertBefore(o, r)
 			}(window, document);
 		</script>
+		<script>
+
+			setTimeout(function(){
+
+				let _createTransaction = Module.cwrap('createTransaction', 'string', ['array'])
+
+				window.createTransaction = function(data) {
+					const encoder = new TextEncoder()
+					const view = encoder.encode(JSON.stringify(data))
+					return JSON.parse(_createTransaction(view))
+				}
+
+				let _generateKeyPair = Module.cwrap('generateKeyPair', 'string', null);
+				window.generateKeyPair = function() {
+					return JSON.parse(_generateKeyPair());
+				}
+			}, 100)
+		</script>
 	</body>
 </html>

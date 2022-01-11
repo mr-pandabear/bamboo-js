@@ -36,20 +36,22 @@ EMSCRIPTEN_KEEPALIVE const char* generateKeyPair(int argc, char ** argv) {
     return cstr(key.dump());
 }
 
-// EMSCRIPTEN_KEEPALIVE const char* createTransaction(int argc, char ** argv) {
-//     json data = json::parse(str);
-//     PublicWalletAddress from = stringToWalletAddress(data["from"]);
-//     PublicWalletAddress to = stringToWalletAddress(data["to"]);
-//     TransactionAmount amount = data["amount"];
-//     TransactionAmount fee = data["fee"];
-//     uint64_t timestamp = data["timestamp"];
-//     PublicKey pubKey = stringToPublicKey(data["publicKey"]);
-//     PublicKey privKey = stringToPrivateKey(data["privateKey"]);
+EMSCRIPTEN_KEEPALIVE const char* createTransaction(char* st) {
+    string str = string(st);
+    cout<<str<<endl;
+    json data = json::parse(str);
+    PublicWalletAddress from = stringToWalletAddress(data["from"]);
+    PublicWalletAddress to = stringToWalletAddress(data["to"]);
+    TransactionAmount amount = data["amount"];
+    TransactionAmount fee = data["fee"];
+    uint64_t timestamp = data["timestamp"];
+    PublicKey pubKey = stringToPublicKey(data["publicKey"]);
+    PrivateKey privKey = stringToPrivateKey(data["privateKey"]);
     
-//     Transaction t(from, to, amount, PublicKey signingKey, fee, timestamp);
-//     t.sign(pubKey, privKey);
-//     return cstr(t.toJson().dump());
-// }
+    Transaction t(from, to, amount, pubKey, fee, timestamp);
+    t.sign(pubKey, privKey);
+    return cstr(t.toJson().dump());
+}
 
 
 #ifdef __cplusplus
